@@ -1,1 +1,9 @@
-{"324931711886688258":{"trigger":"eh","response":"meh"},"324931711886688258":{"trigger":"feminists","response":"lol who?"}}
+{
+  "324931711886688258":{
+    "0": ["eh", "meh"],
+    "1": ["feminists", "lol who?"]
+  },
+  "212571213912866826":{
+    "0": ["hey", "howdy"]
+  }
+}

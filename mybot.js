@@ -57,14 +57,18 @@ client.on("message", (message) => {
   // list clean text suggestions (admin)
   if ((message.content.startsWith(config.prefix + "suggestlist")) && message.member.roles.find("name", "Bot Dev")){
     message.channel.send("**Pending Suggestions:**");
-    message.channel.send(suggestions);
     let i;
-    let name;
-    for (i in suggestions) {
-      name = client.users.get(i).username;
-      message.channel.send(suggestions[i.trigger]);
+    let j;
+    let output = "";
+    for (i in suggestions){
+      //message.channel.send(i);
+      output += `Suggestion(s) from *${client.users.get(i).username}*: `;
+      for (j in suggestions[i]) {
+        output += `${suggestions[i][j][0]} => ${suggestions[i][j][1]}, `;
+      }
+      output += "\n";
     }
-    //message.channel.send(`**Current suggestions are:**${something}`);
+    message.channel.send(output);
     return;
   }
 
@@ -80,7 +84,7 @@ client.on("message", (message) => {
       }
     });
   } else if (message.content.startsWith(config.prefix + "alias")) {
-    suggestions[message.author.id] = {trigger: args[0], response: args[1]};
+    /*suggestions[message.author.id] = {trigger: args[0], response: args[1]};
     fs.writeFile("./cleanTextSuggestions.json", JSON.stringify(suggestions), err => {
       if (err) {
         console.error(err);
@@ -88,7 +92,7 @@ client.on("message", (message) => {
         message.channel.send("Alias suggested. Are you sure this is good for me?");
         return;
       }
-    });
+    });*/
   }
 
   // remove clean text responses (admin)
