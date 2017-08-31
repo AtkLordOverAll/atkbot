@@ -10,7 +10,7 @@ let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf
 // when bot finishes loading
 client.on("ready", () => {
   client.user.setGame("with Atk");
-  console.log("Bot loaded.");
+  console.log("Bot loaded.\n");
 });
 
 // message is sent
@@ -61,7 +61,6 @@ client.on("message", (message) => {
     let j;
     let output = "";
     for (i in suggestions){
-      //message.channel.send(i);
       output += `Suggestion(s) from *${client.users.get(i).username}*: `;
       for (j in suggestions[i]) {
         output += `${suggestions[i][j][0]} => ${suggestions[i][j][1]}, `;
@@ -70,6 +69,53 @@ client.on("message", (message) => {
     }
     message.channel.send(output);
     return;
+  }
+
+  // suggestion approval (admin)
+  if ((message.content.startsWith(config.prefix + "acceptalias")) && (message.member.roles.find("name", "Bot Dev"))) {
+    try {
+      let username = client.users.get(args[0]).username;
+      if (!suggestions[args[0]]){
+        message.channel.send(`User ${username} appears to have no pending suggestions.`);
+        return;
+      }
+      message.channel.send(`${username}`);
+    } catch (err) {
+      message.channel.send("Failed to find person with that ID");
+      return;
+    }
+    let i;
+    let suggestNo = args[1];
+    if (suggestNo === "all" || suggestNo === null || suggestNo === "null"){
+      message.channel.send("Triggered all");
+      /*for (i in suggestions[args[0]]){
+        phrases[suggestions[args[0]][i][0]] = suggestions[args[0]][i][1];
+        delete suggestions[args[0]][i];
+      }*/
+    } else {
+      suggestNo = parseInt(suggestNo) - 1;
+      if (suggestNo === "NaN") {
+        message.channel.send(`Couldn't understand second argument (${args[1]})`);
+        return;
+      }
+      message.channel.send("Triggered specific");
+    }
+    fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
+      if (err) {
+        console.error(err);
+      } else {
+        message.channel.send("Alias(es) assigned. What have you let me become?!");
+        return;
+      }
+    });
+    fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("Suggestions removed");
+        return;
+      }
+    });
   }
 
   // add or suggest clean text responses
