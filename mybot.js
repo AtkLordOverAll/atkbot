@@ -139,6 +139,24 @@ client.on("message", (message) => {
         }
     }
 
+    // evalmsg (admin)
+    if (message.content.startsWith(config.prefix + "evalmsg") && message.author.id === config.ownerID) {
+        try {
+            const code = "message.channel.send(" + args.join(" ") + ");";
+            let evaled = eval(code);
+
+            if (typeof evaled !== "string") {
+                evaled = require("util").inspect(evaled);
+            }
+
+            //message.channel.send(clean(evaled), {code:"x1"});
+            message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
+            //message.channel.send(clean(evaled));
+            return;
+        } catch (err) {
+            message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
+        }
+    }
 });
 
 // new person joins server
