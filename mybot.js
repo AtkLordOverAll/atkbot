@@ -9,7 +9,7 @@ let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf
 
 // when bot finishes loading
 client.on("ready", () => {
-    client.user.setGame("with Atk");
+    //client.user.setGame("with Atk");
     console.log("Bot loaded.\n");
 });
 
