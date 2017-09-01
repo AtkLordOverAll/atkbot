@@ -18,12 +18,13 @@
       "windows"
     ],
     "quotes": [
-      "warn",
-      "double"
+      "off",
+      "backtick"
     ],
     "semi": [
       "error",
       "always"
-    ]
+    ],
+    "no-unused-vars": ["off"]
   }
 }
