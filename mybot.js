@@ -73,36 +73,36 @@ client.on("message", (message) => {
 
     // suggestion approval (admin)
     if ((message.content.startsWith(config.prefix + "acceptalias")) && (message.member.roles.find("name", "Bot Dev"))) {
-        // check username
+        // check provided ID
         try {
             let username = client.users.get(args[0]).username;
             if (!suggestions[args[0]]){
                 message.channel.send(`User ${username} appears to have no pending suggestions.`);
                 return;
             }
-            message.channel.send(`${username}`);
         } catch (err) {
-            message.channel.send("Failed to find person with that ID");
+            message.channel.send("Failed to find person with that ID on this server. Sorry :'(");
             return;
         }
 
-        let i;
-        if (args[1] === "all" || typeof args[1] === undefined){
-            message.channel.send("Triggered all");
-          /*for (i in suggestions[args[0]]){
-            phrases[suggestions[args[0]][i][0]] = suggestions[args[0]][i][1];
-            delete suggestions[args[0]][i];
-          }*/
-        } else {
-            args[1] = parseInt(args[1]) - 1;
-            if (args[1] === "NaN") {
-                message.channel.send(`Couldn't understand second argument (${args[1]})`);
-                return;
+        // if second argument isn't a number, accept all (probably should change this condition)
+        args[1] = parseInt(args[1]) - 1;
+        if (args[1] !== args[1]) {
+            message.channel.send(`Accepting all of ${client.users.get(args[0]).username}'s suggestions. We're basically related at this point ${args[0].toString()}.`);
+            let i;
+            for (i in suggestions[args[0]]){
+                phrases[suggestions[args[0]][i][0]] = suggestions[args[0]][i][1];
+                delete suggestions[args[0]][i];
             }
-            message.channel.send("Triggered specific");
+        } else {
+            message.channel.send(`Accepting one of ${client.users.get(args[0]).username}'s suggestions. I feel special :3`);
+            phrases[suggestions[args[0]][args[1]][0]] = suggestions[args[0]][args[1]][1];
+            delete suggestions[args[0]][args[1]];
         }
-        saveJSON(phrases, "./cleanTextResponses.json", "Alias(es) assigned. What have you let me become?!", message.channel.id);
+
+        saveJSON(phrases, "./cleanTextResponses.json", "", message.channel.id);
         saveJSON(suggestions, "./cleanTextSuggestions.json", "", message.channel.id);
+        return;
     }
 
     // add or suggest clean text responses
