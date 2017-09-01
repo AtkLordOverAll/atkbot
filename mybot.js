@@ -131,7 +131,7 @@ client.on("message", (message) => {
             }
 
             //message.channel.send(clean(evaled), {code:"x1"});
-            message.reply(`I ran what you asked me to (I think):\n\`\`\`${code}\`\`\``);
+            message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
             //message.channel.send(clean(evaled));
             return;
         } catch (err) {
