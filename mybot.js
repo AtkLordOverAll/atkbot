@@ -101,59 +101,23 @@ client.on("message", (message) => {
             }
             message.channel.send("Triggered specific");
         }
-        fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
-            if (err) {
-                console.error(err);
-            } else {
-                message.channel.send("Alias(es) assigned. What have you let me become?!");
-                return;
-            }
-        });
-        fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log("Suggestions removed");
-                return;
-            }
-        });
+        saveJSON(phrases, "./cleanTextResponses.json", "Alias(es) assigned. What have you let me become?!", message.channel.id);
+        saveJSON(suggestions, "./cleanTextSuggestions.json", "", message.channel.id);
     }
 
     // add or suggest clean text responses
     if ((message.content.startsWith(config.prefix + "alias") && (message.member.roles.find("name", "Bot Dev")))) {
         phrases[args[0]] = args[1];
-        fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
-            if (err) {
-                console.error(err);
-            } else {
-                message.channel.send("Alias assigned. What are you programming me to become?!");
-                return;
-            }
-        });
+        saveJSON(phrases, "./cleanTextResponses.json", "Alias assigned. What are you programming me to become?!", message.channel.id);
     } else if (message.content.startsWith(config.prefix + "alias")) {
       /*suggestions[message.author.id] = {trigger: args[0], response: args[1]};
-      fs.writeFile("./cleanTextSuggestions.json", JSON.stringify(suggestions), err => {
-        if (err) {
-          console.error(err);
-        } else {
-          message.channel.send("Alias suggested. Are you sure this is good for me?");
-          return;
-        }
-      });*/
+      saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);*/
     }
 
     // remove clean text responses (admin)
     if ((message.content.startsWith(config.prefix + "dealias")) && (message.member.roles.find("name", "Bot Dev"))) {
         delete phrases[args[0]];
-        saveJSON("./cleanTextResponses.json", "Alias removed. I feel... lacking.");
-        /*fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
-            if (err) {
-                console.error(err);
-            } else {
-                message.channel.send("Alias removed. I feel... lacking.");
-                return;
-            }
-        });*/
+        saveJSON(phrases, "./cleanTextResponses.json", "Alias removed. I feel... lacking.", message.channel.id);
     }
 
     // eval (admin)
@@ -175,10 +139,9 @@ client.on("message", (message) => {
         }
     }
 
-    console.log("Error 404: command not found.");
 });
 
-  // new person joins server
+// new person joins server
 client.on("guildMemberAdd", (member) => {
     member.guild.defaultChannel.send(`Hi ${member.user.toString()} :3 Welcome to the server!`);
     let baseRole = member.guild.roles.find("name", config.basicRole);
@@ -186,7 +149,7 @@ client.on("guildMemberAdd", (member) => {
     member.addRole(baseRole).catch(console.error);
 });
 
-  //shiny clean inputs :3
+// shiny clean inputs :3
 function clean(text) {
     if(typeof(text) === "string"){
         return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
@@ -195,12 +158,13 @@ function clean(text) {
     }
 }
 
-function saveJSON(file, message) {
-    fs.writeFile(file, JSON.stringify(phrases), err => {
+// this is the best function
+function saveJSON(varName, file, message, id = message.channel.id) {
+    fs.writeFile(file, JSON.stringify(varName), err => {
         if (err) {
             console.error(err);
         } else {
-            message.channel.send(message);
+            client.channels.get(id).send(message);
             return;
         }
     });
