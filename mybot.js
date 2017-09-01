@@ -145,14 +145,15 @@ client.on("message", (message) => {
     // remove clean text responses (admin)
     if ((message.content.startsWith(config.prefix + "dealias")) && (message.member.roles.find("name", "Bot Dev"))) {
         delete phrases[args[0]];
-        fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
+        saveJSON("./cleanTextResponses.json", "Alias removed. I feel... lacking.");
+        /*fs.writeFile("./cleanTextResponses.json", JSON.stringify(phrases), err => {
             if (err) {
                 console.error(err);
             } else {
                 message.channel.send("Alias removed. I feel... lacking.");
                 return;
             }
-        });
+        });*/
     }
 
     // eval (admin)
@@ -192,6 +193,17 @@ function clean(text) {
     } else {
         return text;
     }
+}
+
+function saveJSON(file, message) {
+    fs.writeFile(file, JSON.stringify(phrases), err => {
+        if (err) {
+            console.error(err);
+        } else {
+            message.channel.send(message);
+            return;
+        }
+    });
 }
 
 client.login(config.token);
