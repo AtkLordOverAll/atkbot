@@ -73,6 +73,7 @@ client.on("message", (message) => {
 
     // suggestion approval (admin)
     if ((message.content.startsWith(config.prefix + "acceptalias")) && (message.member.roles.find("name", "Bot Dev"))) {
+        // check username
         try {
             let username = client.users.get(args[0]).username;
             if (!suggestions[args[0]]){
@@ -84,17 +85,17 @@ client.on("message", (message) => {
             message.channel.send("Failed to find person with that ID");
             return;
         }
+
         let i;
-        let suggestNo = args[1];
-        if (suggestNo === "all" || suggestNo === null || suggestNo === "null"){
+        if (args[1] === "all" || typeof args[1] === undefined){
             message.channel.send("Triggered all");
           /*for (i in suggestions[args[0]]){
             phrases[suggestions[args[0]][i][0]] = suggestions[args[0]][i][1];
             delete suggestions[args[0]][i];
           }*/
         } else {
-            suggestNo = parseInt(suggestNo) - 1;
-            if (suggestNo === "NaN") {
+            args[1] = parseInt(args[1]) - 1;
+            if (args[1] === "NaN") {
                 message.channel.send(`Couldn't understand second argument (${args[1]})`);
                 return;
             }
@@ -154,7 +155,7 @@ client.on("message", (message) => {
         });
     }
 
-    //eval
+    // eval (admin)
     if (message.content.startsWith(config.prefix + "eval") && message.author.id === config.ownerID) {
         try {
             const code = args.join(" ");
