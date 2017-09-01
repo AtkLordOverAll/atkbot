@@ -120,10 +120,11 @@ client.on("message", (message) => {
         saveJSON(phrases, "./cleanTextResponses.json", "Alias removed. I feel... lacking.", message.channel.id);
     }
 
-    // eval (admin)
-    if (message.content.startsWith(config.prefix + "eval") && message.author.id === config.ownerID) {
+    // evalmsg (admin)
+    if (message.content.startsWith(config.prefix + "evalmsg") && message.author.id === config.ownerID) {
         try {
-            const code = args.join(" ");
+            const code = "message.channel.send(" + args.join(" ") + ");";
+            console.log(code);
             let evaled = eval(code);
 
             if (typeof evaled !== "string") {
@@ -139,10 +140,10 @@ client.on("message", (message) => {
         }
     }
 
-    // evalmsg (admin)
-    if (message.content.startsWith(config.prefix + "evalmsg") && message.author.id === config.ownerID) {
+    // eval (admin)
+    if (message.content.startsWith(config.prefix + "eval") && message.author.id === config.ownerID) {
         try {
-            const code = "message.channel.send(" + args.join(" ") + ");";
+            const code = args.join(" ");
             let evaled = eval(code);
 
             if (typeof evaled !== "string") {
