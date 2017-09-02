@@ -9,7 +9,7 @@ let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf
 
 // when bot finishes loading
 client.on("ready", () => {
-    //client.user.setGame("with Atk");
+    //client.user.setGame(`with Atk`);
     console.log("Bot loaded.\n");
 });
 
@@ -25,6 +25,7 @@ client.on("message", (message) => {
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
+
     const args = message.content.split(/\s+/g).slice(1);
     if (args.length === 0) {
         console.log(`Saw ${message.content.split(/\s+/g)[0].substring(1)} command sent from user ${message.author.username} (ID: ${message.author.id})`);
