@@ -110,9 +110,17 @@ client.on("message", (message) => {
         phrases[args[0]] = args[1];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias accepted. What are you programming me to become?!", message.channel.id);
     } else if (message.content.startsWith(config.prefix + "alias")) {
-        let no = suggestions[message.author.id].keys(suggestions[message.author.id]).length;
-        suggestions[message.author.id][no] = [args[0], args[1]];
-        saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);
+        //let no = Object.keys(suggestions[message.author.id]).length;
+        //console.log(no);
+        let count,key = 0;
+        for (key in suggestions[message.author.id]) {
+            if (suggestions[message.author.id].hasOwnProperty(key)) {
+                count++;
+            }
+        }
+        console.log(count);
+        //suggestions[message.author.id][no] = [args[0], args[1]];
+        //saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);
     }
 
     // remove clean text responses (admin)
