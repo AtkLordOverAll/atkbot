@@ -108,10 +108,11 @@ client.on("message", (message) => {
     // add or suggest clean text responses
     if ((message.content.startsWith(config.prefix + "alias") && (message.member.roles.find("name", "Bot Dev")))) {
         phrases[args[0]] = args[1];
-        saveJSON(phrases, "./cleanTextResponses.json", "Alias assigned. What are you programming me to become?!", message.channel.id);
+        saveJSON(phrases, "./cleanTextResponses.json", "Alias accepted. What are you programming me to become?!", message.channel.id);
     } else if (message.content.startsWith(config.prefix + "alias")) {
-      /*suggestions[message.author.id] = {trigger: args[0], response: args[1]};
-      saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);*/
+        let no = suggestions[message.author.id].keys(suggestions[message.author.id]).length;
+        suggestions[message.author.id][no] = [args[0], args[1]];
+        saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);
     }
 
     // remove clean text responses (admin)
