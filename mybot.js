@@ -22,6 +22,17 @@ client.on("message", (message) => {
     } else if (replies[message.content]) {
         message.channel.send(replies[message.content]);
         return;
+    } else if (message.content.startsWith("I'm")){
+        // dad joke
+        let letters = message.content.split("");
+        let end = letters.length - 1;
+        for (let a = 0; a < letters.length; a++) {
+            if (letters[a] === "." || letters[a] === ",") {
+                end = a;
+            }
+        }
+        let output = letters.slice(0, end).join("");
+        message.channel.send(`Hi ${output}, I'm Dad.`);
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
