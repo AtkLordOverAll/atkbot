@@ -57,8 +57,7 @@ client.on("message", (message) => {
     // list clean text suggestions (admin)
     if ((message.content.startsWith(config.prefix + "suggestlist")) && message.member.roles.find("name", "Bot Dev")){
         message.channel.send("**Pending Suggestions:**");
-        let i;
-        let j;
+        let i,j;
         let output = "";
         for (i in suggestions){
             output += `Suggestion(s) from *${client.users.get(i).username}*: `;
