@@ -25,13 +25,20 @@ client.on("message", (message) => {
     } else if (message.content.startsWith("I'm")){
         // dad joke
         let letters = message.content.split("");
-        let end = letters.length - 1;
-        for (let a = 0; a < letters.length; a++) {
+        let end = letters.length;
+        let capitalise = false;
+        for (let a = 3; a < letters.length; a++) {
+            if (capitalise === true) {
+                letters[a] = letters[a].toUpperCase();
+                capitalise = false;
+            }
             if (letters[a] === "." || letters[a] === ",") {
                 end = a;
+            } else if (letters[a] === " "){
+                capitalise = true;
             }
         }
-        let output = letters.slice(0, end).join("");
+        let output = letters.slice(4, end).join("");
         message.channel.send(`Hi ${output}, I'm Dad.`);
     } else if (!message.content.startsWith(config.prefix)) {
         return;
