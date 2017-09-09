@@ -24,11 +24,11 @@ client.on("message", (message) => {
         return;
     } else if (message.content.toLowerCase().startsWith("i'm")) {
         // dad joke
-        message.channel.send(`Hi ${dadJoke(message.content, 4)}, I'm Dad.`);
+        message.channel.send(`${dadJoke(message.content, 4)}`);
         return;
     } else if (message.content.toLowerCase().startsWith("im")) {
         // dad joke
-        message.channel.send(`Hi ${dadJoke(message.content, 3)}, I'm Dad.`);
+        message.channel.send(`${dadJoke(message.content, 3)}`);
         return;
     } else if (!message.content.startsWith(config.prefix)) {
         return;
@@ -206,6 +206,8 @@ function dadJoke(phrase, snip) {
         if (capitalise === true) {
             letters[a] = letters[a].toUpperCase();
             capitalise = false;
+        } else {
+            letters[a] = letters[a].toLowerCase();
         }
         if (letters[a] === "." || letters[a] === ",") {
             end = a;
@@ -213,7 +215,11 @@ function dadJoke(phrase, snip) {
             capitalise = true;
         }
     }
-    return letters.slice(snip, end).join("");
+    let output = `Hi ${letters.slice(snip, end).join("")}, I'm Dad.`;
+    if (output === "Hi Dad, I'm Dad.") {
+        output = "Hi Dad, I'm Dad too. *salutes*";
+    }
+    return output;
 }
 
 client.login(config.token);
