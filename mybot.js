@@ -138,7 +138,8 @@ client.on("message", (message) => {
 
     // evalmsg (admin)
     if (command === "evalmsg" && message.member.roles.find("name", "Bot Dev")) {
-        try {
+
+        /*try {
             const code = "message.channel.send(" + args.join(" ") + ");";
             console.log(code);
             let evaled = eval(code);
@@ -151,12 +152,13 @@ client.on("message", (message) => {
             return;
         } catch (err) {
             message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
-        }
+        }*/
     }
 
     // eval (owner)
     if (command === "eval" && message.author.id === config.ownerID) {
-        try {
+        evaluate(message.content, args);
+        /*try {
             const code = args.join(" ");
             let evaled = eval(code);
 
@@ -170,7 +172,7 @@ client.on("message", (message) => {
             return;
         } catch (err) {
             message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
-        }
+        }*/
     }
 });
 
@@ -181,6 +183,25 @@ client.on("guildMemberAdd", (member) => {
     console.log(`User ${member.user.username} (ID: ${member.user.id}) joined the server`);
     member.addRole(baseRole).catch(console.error);
 });
+
+function evaluate(msg, args) {
+    let response;
+    try {
+        const code = args.join(" ");
+        let evaled = eval(code);
+
+        if (typeof evaled !== "string") {
+            evaled = require("util").inspect(evaled);
+        }
+
+        //message.channel.send(clean(evaled), {code:"x1"});
+        response = `I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``;
+        //message.channel.send(clean(evaled));
+    } catch (err) {
+        response = `\`\`\`xl\n${clean(err)}\n\`\`\``;
+    }
+    return response;
+}
 
 // used with eval
 function clean(text) {
@@ -203,7 +224,7 @@ function saveJSON(varName, file, message, id = message.channel.id) {
     });
 }
 
-// need I say more
+// need I say more?
 function dadJoke(phrase, snip) {
     let letters = phrase.split("");
     let end = letters.length;
