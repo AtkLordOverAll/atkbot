@@ -12,10 +12,10 @@ f03 -   Help command to list available commands, changing depending on what role
 
 Tweaks to make:
 
-t01 -   Command calling needs to be exact, not just startsWith()
-
 t02 -   make generic function for eval
 
 Things done:
 
 f04 -   Eval return command which automatically surrounds the eval command with message.channel.send();
+
+t01 -   Command calling needs to be exact, not just startsWith()

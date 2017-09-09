@@ -21,6 +21,7 @@ client.on("message", (message) => {
         return;
     } else if (replies[message.content]) {
         message.channel.send(replies[message.content]);
+        console.log("Clean text response given.");
         return;
     } else if (message.content.toLowerCase().startsWith("i'm")) {
         // dad joke
@@ -34,22 +35,24 @@ client.on("message", (message) => {
         return;
     }
 
+    const command = message.content.split(/\s+/g)[0].substring(1);
     const args = message.content.split(/\s+/g).slice(1);
+
     if (args.length === 0) {
-        console.log(`Saw ${message.content.split(/\s+/g)[0].substring(1)} command sent from user ${message.author.username} (ID: ${message.author.id})`);
+        console.log(`Saw ${command} command sent from user ${message.author.username} (ID: ${message.author.id})`);
     } else {
-        console.log(`Saw ${message.content.split(/\s+/g)[0].substring(1)} command with arguments [${args}], sent from user ${message.author.username} (ID: ${message.author.id})`);
+        console.log(`Saw ${command} command with arguments [${args}], sent from user ${message.author.username} (ID: ${message.author.id})`);
     }
 
     //list emojis
-    if (message.content.startsWith(config.prefix + "emojis")) {
+    if (command === "emojis") {
         const emojiList = message.guild.emojis.map(e=>e.toString()).join(" ");
         message.channel.send(emojiList);
         return;
     }
 
     // ASL lmao
-    if (message.content.startsWith(config.prefix + "asl")) {
+    if (command === "asl") {
         let age = args[0];
         let sex = args[1];
         let location = args[2];
@@ -58,13 +61,13 @@ client.on("message", (message) => {
     }
 
     // list clean text responses (admin)
-    if ((message.content.startsWith(config.prefix + "aliaslist")) && message.member.roles.find("name", "Bot Dev")){
+    if ((command === "aliaslist") && message.member.roles.find("name", "Bot Dev")){
         message.channel.send(`**Current aliases are:**\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g,": ").replace(/{/g,"").replace(/}/g,"")}`);
         return;
     }
 
     // list clean text suggestions (admin)
-    if ((message.content.startsWith(config.prefix + "suggestlist")) && message.member.roles.find("name", "Bot Dev")){
+    if ((command === "suggestlist") && message.member.roles.find("name", "Bot Dev")){
         message.channel.send("**Pending Suggestions:**");
         let i;
         let j;
@@ -81,7 +84,7 @@ client.on("message", (message) => {
     }
 
     // suggestion approval (admin)
-    if ((message.content.startsWith(config.prefix + "acceptalias")) && (message.member.roles.find("name", "Bot Dev"))) {
+    if ((command === "acceptalias") && (message.member.roles.find("name", "Bot Dev"))) {
         // check username
         try {
             let username = client.users.get(args[0]).username;
@@ -115,22 +118,22 @@ client.on("message", (message) => {
     }
 
     // add or suggest clean text responses
-    if ((message.content.startsWith(config.prefix + "alias") && (message.member.roles.find("name", "Bot Dev")))) {
+    if ((command === "alias") && (message.member.roles.find("name", "Bot Dev"))) {
         phrases[args[0]] = args[1];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias assigned. What are you programming me to become?!", message.channel.id);
-    } else if (message.content.startsWith(config.prefix + "alias")) {
+    } else if (command === "alias") {
       /*suggestions[message.author.id] = {trigger: args[0], response: args[1]};
       saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);*/
     }
 
     // remove clean text responses (admin)
-    if ((message.content.startsWith(config.prefix + "dealias")) && (message.member.roles.find("name", "Bot Dev"))) {
+    if (command === "dealias" && message.member.roles.find("name", "Bot Dev")) {
         delete phrases[args[0]];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias removed. I feel... lacking.", message.channel.id);
     }
 
     // evalmsg (admin)
-    if (message.content.startsWith(config.prefix + "evalmsg") && message.author.id === config.ownerID) {
+    if (command === "evalmsg" && message.member.roles.find("name", "Bot Dev")) {
         try {
             const code = "message.channel.send(" + args.join(" ") + ");";
             console.log(code);
@@ -149,8 +152,8 @@ client.on("message", (message) => {
         }
     }
 
-    // eval (admin)
-    if (message.content.startsWith(config.prefix + "eval") && message.author.id === config.ownerID) {
+    // eval (owner)
+    if (command === "eval" && message.author.id === config.ownerID) {
         try {
             const code = args.join(" ");
             let evaled = eval(code);
@@ -177,7 +180,7 @@ client.on("guildMemberAdd", (member) => {
     member.addRole(baseRole).catch(console.error);
 });
 
-// shiny clean inputs :3
+// used with eval
 function clean(text) {
     if(typeof(text) === "string"){
         return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
@@ -219,6 +222,7 @@ function dadJoke(phrase, snip) {
     if (output === "Hi Dad, I'm Dad.") {
         output = "Hi Dad, I'm Dad too. *salutes*";
     }
+    console.log(`Dad joke made. ("${output}")`);
     return output;
 }
 
