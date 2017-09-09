@@ -50,8 +50,7 @@ client.on("message", (message) => {
 
     //list emojis
     if (command === "emojis") {
-        const emojiList = message.guild.emojis.map(e=>e.toString()).join(" ");
-        message.channel.send(emojiList);
+        message.channel.send(message.guild.emojis.map(e=>e.toString()).join(" "));
         return;
     }
 
