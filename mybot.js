@@ -9,14 +9,14 @@ let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf
 
 // when bot finishes loading
 client.on("ready", () => {
-    //client.user.setGame(`with Atk`);
+    client.user.setPresence({game: {name: config.game, type: 0}});
     console.log("Bot loaded.\n");
 });
 
 // message is sent
 client.on("message", (message) => {
 
-    //terminates if message is from a bot, then checks for clean text responses, then terminates if no command prefix is found
+    // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
     if (message.author.bot) {
         return;
     } else if (replies[message.content]) {
@@ -48,7 +48,7 @@ client.on("message", (message) => {
         console.log(`Saw ${command} command with arguments [${args}], sent from user ${message.author.username} (ID: ${message.author.id})`);
     }
 
-    //list emojis
+    // list emojis
     if (command === "emojis") {
         message.channel.send(message.guild.emojis.map(e=>e.toString()).join(" "));
         return;
@@ -61,13 +61,13 @@ client.on("message", (message) => {
     }
 
     // list clean text responses (admin)
-    if ((command === "aliaslist") && message.member.roles.find("name", "Bot Dev")){
+    if (command === "aliaslist" && message.member.roles.find("name", "Bot Dev")){
         message.channel.send(`**Current aliases are:**\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g,": ").replace(/{/g,"").replace(/}/g,"")}`);
         return;
     }
 
     // list clean text suggestions (admin)
-    if ((command === "suggestlist") && message.member.roles.find("name", "Bot Dev")){
+    if (command === "suggestlist" && message.member.roles.find("name", "Bot Dev")){
         message.channel.send("**Pending Suggestions:**");
         let i;
         let j;
@@ -84,7 +84,7 @@ client.on("message", (message) => {
     }
 
     // suggestion approval (admin)
-    if ((command === "acceptalias") && (message.member.roles.find("name", "Bot Dev"))) {
+    if (command === "acceptalias" && message.member.roles.find("name", "Bot Dev")) {
         // check username
         try {
             let username = client.users.get(args[0]).username;
@@ -118,7 +118,7 @@ client.on("message", (message) => {
     }
 
     // add or suggest clean text responses
-    if ((command === "alias") && (message.member.roles.find("name", "Bot Dev"))) {
+    if (command === "alias" && message.member.roles.find("name", "Bot Dev")) {
         phrases[args[0]] = args[1];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias assigned. What are you programming me to become?!", message.channel.id);
     } else if (command === "alias") {
@@ -148,6 +148,12 @@ client.on("message", (message) => {
         } catch (err) {
             message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
         }
+    }
+
+    // set game (admin)
+    if (command === "setgame" && message.member.roles.find("name", "Bot Dev")) {
+        client.user.setPresence({game: {name: args.join(" "), type: 0}});
+        return;
     }
 
     // eval (owner)
