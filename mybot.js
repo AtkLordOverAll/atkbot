@@ -9,7 +9,7 @@ let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf
 
 // when bot finishes loading
 client.on("ready", () => {
-    //client.user.setGame("with Atk");
+    //client.user.setGame(`with Atk`);
     console.log("Bot loaded.\n");
 });
 
@@ -22,9 +22,18 @@ client.on("message", (message) => {
     } else if (replies[message.content]) {
         message.channel.send(replies[message.content]);
         return;
+    } else if (message.content.toLowerCase().startsWith("i'm")) {
+        // dad joke
+        message.channel.send(`${dadJoke(message.content, 4)}`);
+        return;
+    } else if (message.content.toLowerCase().startsWith("im")) {
+        // dad joke
+        message.channel.send(`${dadJoke(message.content, 3)}`);
+        return;
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
+
     const args = message.content.split(/\s+/g).slice(1);
     if (args.length === 0) {
         console.log(`Saw ${message.content.split(/\s+/g)[0].substring(1)} command sent from user ${message.author.username} (ID: ${message.author.id})`);
@@ -128,6 +137,26 @@ client.on("message", (message) => {
         saveJSON(phrases, "./cleanTextResponses.json", "Alias removed. I feel... lacking.", message.channel.id);
     }
 
+    // evalmsg (admin)
+    if (message.content.startsWith(config.prefix + "evalmsg") && message.author.id === config.ownerID) {
+        try {
+            const code = "message.channel.send(" + args.join(" ") + ");";
+            console.log(code);
+            let evaled = eval(code);
+
+            if (typeof evaled !== "string") {
+                evaled = require("util").inspect(evaled);
+            }
+
+            //message.channel.send(clean(evaled), {code:"x1"});
+            message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
+            //message.channel.send(clean(evaled));
+            return;
+        } catch (err) {
+            message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
+        }
+    }
+
     // eval (admin)
     if (message.content.startsWith(config.prefix + "eval") && message.author.id === config.ownerID) {
         try {
@@ -146,7 +175,6 @@ client.on("message", (message) => {
             message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
         }
     }
-
 });
 
 // new person joins server
@@ -176,6 +204,30 @@ function saveJSON(varName, file, message, id = message.channel.id) {
             return;
         }
     });
+}
+
+function dadJoke(phrase, snip) {
+    let letters = phrase.split("");
+    let end = letters.length;
+    let capitalise = true;
+    for (let a = snip - 1; a < letters.length; a++) {
+        if (capitalise === true) {
+            letters[a] = letters[a].toUpperCase();
+            capitalise = false;
+        } else {
+            letters[a] = letters[a].toLowerCase();
+        }
+        if (letters[a] === "." || letters[a] === ",") {
+            end = a;
+        } else if (letters[a] === " "){
+            capitalise = true;
+        }
+    }
+    let output = `Hi ${letters.slice(snip, end).join("")}, I'm Dad.`;
+    if (output === "Hi Dad, I'm Dad.") {
+        output = "Hi Dad, I'm Dad too. *salutes*";
+    }
+    return output;
 }
 
 client.login(config.token);
