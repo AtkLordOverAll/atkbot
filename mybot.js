@@ -31,6 +31,10 @@ client.on("message", (message) => {
         // dad joke
         message.channel.send(`${dadJoke(message.content, 3)}`);
         return;
+    } else if (message.content.toLowerCase().startsWith("i am")) {
+        // dad joke
+        message.channel.send(`${dadJoke(message.content, 5)}`);
+        return;
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
@@ -199,6 +203,7 @@ function saveJSON(varName, file, message, id = message.channel.id) {
     });
 }
 
+// need I say more
 function dadJoke(phrase, snip) {
     let letters = phrase.split("");
     let end = letters.length;
