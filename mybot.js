@@ -143,9 +143,7 @@ client.on("message", (message) => {
                 evaled = require("util").inspect(evaled);
             }
 
-            //message.channel.send(clean(evaled), {code:"x1"});
             message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
-            //message.channel.send(clean(evaled));
             return;
         } catch (err) {
             message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
