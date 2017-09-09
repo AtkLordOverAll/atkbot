@@ -6,8 +6,7 @@ Features to add:
 f01 -   Alias suggestions
 
 f02 -   Bot clean text responses based on part of the message, not requiring literal exact inputs
-
-        a - input cleaner (lowercase and remove certain punctuation)
+f02a -  input cleaner (lowercase and remove certain punctuation)
 
 f03 -   Help command to list available commands, changing depending on what roles are available to the user
 
