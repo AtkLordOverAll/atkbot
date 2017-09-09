@@ -56,10 +56,7 @@ client.on("message", (message) => {
 
     // ASL lmao
     if (command === "asl") {
-        let age = args[0];
-        let sex = args[1];
-        let location = args[2];
-        message.reply(` I see you're a ${age} year old ${sex} from ${location}. Wanna date?`);
+        message.reply(` I see you're a ${args[0]} year old ${args[1]} from ${args[2]}. Wanna date?`);
         return;
     }
 
