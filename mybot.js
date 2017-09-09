@@ -22,24 +22,14 @@ client.on("message", (message) => {
     } else if (replies[message.content]) {
         message.channel.send(replies[message.content]);
         return;
-    } else if (message.content.startsWith("I'm")){
+    } else if (message.content.toLowerCase().startsWith("i'm")) {
         // dad joke
-        let letters = message.content.split("");
-        let end = letters.length;
-        let capitalise = false;
-        for (let a = 3; a < letters.length; a++) {
-            if (capitalise === true) {
-                letters[a] = letters[a].toUpperCase();
-                capitalise = false;
-            }
-            if (letters[a] === "." || letters[a] === ",") {
-                end = a;
-            } else if (letters[a] === " "){
-                capitalise = true;
-            }
-        }
-        let output = letters.slice(4, end).join("");
-        message.channel.send(`Hi ${output}, I'm Dad.`);
+        message.channel.send(`Hi ${dadJoke(message.content, 4)}, I'm Dad.`);
+        return;
+    } else if (message.content.toLowerCase().startsWith("im")) {
+        // dad joke
+        message.channel.send(`Hi ${dadJoke(message.content, 3)}, I'm Dad.`);
+        return;
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
@@ -206,6 +196,24 @@ function saveJSON(varName, file, message, id = message.channel.id) {
             return;
         }
     });
+}
+
+function dadJoke(phrase, snip) {
+    let letters = phrase.split("");
+    let end = letters.length;
+    let capitalise = true;
+    for (let a = snip - 1; a < letters.length; a++) {
+        if (capitalise === true) {
+            letters[a] = letters[a].toUpperCase();
+            capitalise = false;
+        }
+        if (letters[a] === "." || letters[a] === ",") {
+            end = a;
+        } else if (letters[a] === " "){
+            capitalise = true;
+        }
+    }
+    return letters.slice(snip, end).join("");
 }
 
 client.login(config.token);
