@@ -48,7 +48,7 @@ client.on("message", (message) => {
         console.log(`Saw ${command} command with arguments [${args}], sent from user ${message.author.username} (ID: ${message.author.id})`);
     }
 
-    //list emojis
+    // list emojis
     if (command === "emojis") {
         message.channel.send(message.guild.emojis.map(e=>e.toString()).join(" "));
         return;
