@@ -19,7 +19,7 @@ client.on("message", (message) => {
     // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
     if (message.author.bot) {
         return;
-    } else if (replies[message.content]) {
+    } else if (replies[message.content.toLowerCase()]) {
         message.channel.send(replies[message.content]);
         console.log("Clean text response given.");
         return;
