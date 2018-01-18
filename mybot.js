@@ -23,21 +23,23 @@ client.on("message", (message) => {
         message.channel.send(replies[message.content]);
         console.log("Clean text response given.");
         return;
-    } else if (message.content.toLowerCase().startsWith("i'm")) {
-        // dad joke
-        message.channel.send(`${dadJoke(message.content, 4)}`);
-        return;
-    } else if (message.content.toLowerCase().startsWith("im")) {
-        // dad joke
-        message.channel.send(`${dadJoke(message.content, 3)}`);
-        return;
-    } else if (message.content.toLowerCase().startsWith("i am")) {
-        // dad joke
-        message.channel.send(`${dadJoke(message.content, 5)}`);
-        return;
-    } else if (message.content.toLowerCase().startsWith("i m")) {
-        // dad joke (fuck you adam)
-        message.channel.send(`${dadJoke(message.content, 4)}`);
+    } else if (message.content.length < 100) {
+        if (message.content.toLowerCase().startsWith("i'm")) {
+            // dad joke
+            message.channel.send(`${dadJoke(message.content, 4)}`);
+            return;
+        } else if (message.content.toLowerCase().startsWith("im")) {
+            // dad joke
+            message.channel.send(`${dadJoke(message.content, 3)}`);
+            return;
+        } else if (message.content.toLowerCase().startsWith("i am")) {
+            // dad joke
+            message.channel.send(`${dadJoke(message.content, 5)}`);
+            return;
+        } else if (message.content.toLowerCase().startsWith("i m")) {
+            // dad joke (fuck you adam)
+            message.channel.send(`${dadJoke(message.content, 4)}`);
+        }
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
