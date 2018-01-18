@@ -23,7 +23,7 @@ client.on("message", (message) => {
         message.channel.send(replies[message.content]);
         console.log("Clean text response given.");
         return;
-    } else if (message.content.length < 100) {
+    } else if (message.content.length < 100) { // limits length of dad jokes
         if (message.content.toLowerCase().startsWith("i'm")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 4)}`);
