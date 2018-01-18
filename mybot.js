@@ -35,6 +35,9 @@ client.on("message", (message) => {
         // dad joke
         message.channel.send(`${dadJoke(message.content, 5)}`);
         return;
+    } else if (message.content.toLowerCase().startsWith("i m")) {
+        // dad joke (fuck you adam)
+        message.channel.send(`${dadJoke(message.content, 4)}`);
     } else if (!message.content.startsWith(config.prefix)) {
         return;
     }
