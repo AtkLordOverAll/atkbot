@@ -54,7 +54,7 @@ client.on("message", (message) => {
     }
 
     // list emojis
-    if (command === "emojis") {
+    /*if (command === "emojis") {
         message.channel.send(message.guild.emojis.map(e=>e.toString()).join(" "));
         return;
     }
@@ -63,7 +63,7 @@ client.on("message", (message) => {
     if (command === "asl") {
         message.reply(` I see you're a ${args[0]} year old ${args[1]} from ${args[2]}. Wanna date?`);
         return;
-    }
+    }*/
 
     // list clean text responses (admin)
     if (command === "aliaslist" && message.member.roles.find("name", "Bot Dev")){
