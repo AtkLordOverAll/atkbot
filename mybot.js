@@ -20,7 +20,7 @@ client.on("message", (message) => {
     if (message.author.bot) {
         return;
     } else if (replies[message.content.toLowerCase()]) {
-        message.channel.send(replies[message.content]);
+        message.channel.send(replies[message.content.toLowerCase()]);
         console.log("Clean text response given.");
         return;
     } else if (message.content.length < 100) { // limits length of dad jokes
@@ -63,6 +63,16 @@ client.on("message", (message) => {
     if (command === "asl") {
         message.reply(` I see you're a ${args[0]} year old ${args[1]} from ${args[2]}. Wanna date?`);
         return;
+    }*/
+
+    /*if (command === "rgb") {
+        rgbness = [0,0,0];
+        for (let a = 0; a < 3; a++) {
+            rgbness[a] = Math.floor(args[a] / 85);
+        }
+        if (rgbness[0] === rgbness[1] && rgbness[1] === rgbness[2]) {
+            message.channel.send("That's some shitty colour. Unless it's black, then well done son!");
+        } else if (rgbness[0] === 1 && )
     }*/
 
     // list clean text responses (admin)
