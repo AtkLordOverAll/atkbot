@@ -40,7 +40,8 @@ client.on("message", (message) => {
             // dad joke (fuck you adam)
             message.channel.send(`${dadJoke(message.content, 4)}`);
         }
-    } else if (!message.content.startsWith(config.prefix)) {
+    }
+    if (!message.content.startsWith(config.prefix)) {
         return;
     }
 
@@ -65,15 +66,43 @@ client.on("message", (message) => {
         return;
     }*/
 
-    /*if (command === "rgb") {
-        rgbness = [0,0,0];
+    if (command === "rgb" && args.length == 3) {
+        let rgb = [0,0,0];
         for (let a = 0; a < 3; a++) {
-            rgbness[a] = Math.floor(args[a] / 85);
+            rgb[a] = (Math.floor(args[a] / 85));
         }
-        if (rgbness[0] === rgbness[1] && rgbness[1] === rgbness[2]) {
-            message.channel.send("That's some shitty colour. Unless it's black, then well done son!");
-        } else if (rgbness[0] === 1 && )
-    }*/
+
+        let output = "Good question son!.\nAs you can clearly see, ";
+
+        if (rgb[0] === 0) {
+            output += "there isn't a lot of red, ";
+        } else if (rgb[0] === 1) {
+            output += "you've got some red in there, ";
+        } else if (rgb[0] > 1) {
+            output += "you've got a healthy dollop of red, ";
+        }
+
+        if (rgb[1] === 0) {
+            output += "not much green, ";
+        } else if (rgb[1] === 1) {
+            output += "you've got some green, ";
+        } else if (rgb[1] > 1) {
+            output += "a healthy dollop of Shrek in the mix, ";
+        }
+
+        if (rgb[2] === 0) {
+            output += "and that's about it to be honest.";
+        } else if (rgb[2] === 1) {
+            output += "and a splotch of blue to round it all off.";
+        } else if (rgb[2] > 1) {
+            output += "and holy shit this is my jam!\n*I'm blue da ba dee da ba daa*\n*Da ba dee da ba daa, da ba dee da ba daa, da ba dee da ba daa*\n*Da ba dee da ba daa, da ba dee da ba daa, da ba dee da ba daa*";
+            message.channel.send(output);
+            return;
+        }
+        output += "\nI hope that helped you come to terms with that colour you just gave me. I've basically inherited the abilities of one of my many sons, Mallen.";
+        message.channel.send(output);
+        return;
+    }
 
     // list clean text responses (admin)
     if (command === "aliaslist" && message.member.roles.find("name", "Bot Dev")){
