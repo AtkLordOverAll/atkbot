@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const fs = require("fs");
 const config = require("./config.json");
-const replies = require("./cleanTextResponses.json");
+const reload = require("reload-require")(module);
 
 let phrases = JSON.parse(fs.readFileSync("./cleanTextResponses.json", "utf8"));
 let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf8"));
@@ -19,8 +19,8 @@ client.on("message", (message) => {
     // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
     if (message.author.bot) {
         return;
-    } else if (replies[message.content.toLowerCase()]) {
-        message.channel.send(replies[message.content.toLowerCase()]);
+    } else if (phrases[message.content.toLowerCase()]) {
+        message.channel.send(phrases[message.content.toLowerCase()]);
         console.log("Clean text response given.");
         return;
     } else if (message.content.length < 100) { // limits length of dad jokes
