@@ -6,6 +6,7 @@ const reload = require("reload-require")(module);
 
 let phrases = JSON.parse(fs.readFileSync("./cleanTextResponses.json", "utf8"));
 let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf8"));
+let alphabet = JSON.parse(fs.readFileSync("./phoneticAlphabet.json", "utf8"));
 
 // when bot finishes loading
 client.on("ready", () => {
@@ -41,6 +42,33 @@ client.on("message", (message) => {
             message.channel.send(`${dadJoke(message.content, 4)}`);
         }
     }
+
+    if (message.content.toLowerCase().startsWith("dad do your army impression")) {
+        console.log(`Doing an army impression of: "${message.content.slice(28)}"`);
+
+        let msg = message.content.slice(28).toUpperCase();
+        let out, sub = "";
+        for (let ch = 0; ch < msg.length; ch++) {
+            sub = alphabet[msg.charAt(ch)];
+            console.log(sub);
+
+            if (sub != null) {
+                console.log(`sub != null is TRUE, adding ${sub}`);
+                out += sub;
+
+            } else {
+                console.log(`sub != null is FALSE, adding ${msg.charAt(ch)}`);
+                out += msg.charAt(ch);
+            }
+            console.log(`current output is: "${out}" [before addSpace()]`);
+            out += addSpace(msg, ch);
+            console.log(`current output is: "${out}" [after addSpace()]`);
+        }
+        message.channel.send(`**Sir, yes, sir!**`);
+        message.channel.send(`${out.slice(9)}`); // the fact that I'm slicing out "undefined" hurts me
+        return;
+    }
+
     if (!message.content.startsWith(config.prefix)) {
         return;
     }
@@ -57,12 +85,6 @@ client.on("message", (message) => {
     // list emojis
     /*if (command === "emojis") {
         message.channel.send(message.guild.emojis.map(e=>e.toString()).join(" "));
-        return;
-    }
-
-    // ASL lmao
-    if (command === "asl") {
-        message.reply(` I see you're a ${args[0]} year old ${args[1]} from ${args[2]}. Wanna date?`);
         return;
     }*/
 
@@ -281,6 +303,20 @@ function dadJoke(phrase, snip) {
     }
     console.log(`Dad joke made. ("${output}")`);
     return output;
+}
+
+// used for army joke
+function addSpace(str, ch) {
+    if (ch != str.length - 2) { // Avoid end of array type errors (hopefully)
+        if (alphabet[str.charAt(ch + 1)] != null) { // If the next character is going to be substituted
+            return " ";
+        }
+    } else {
+        if (alphabet[str.charAt(str.length - 1)] != null) {
+            return " ";
+        }
+    }
+    return "";
 }
 
 client.login(config.token);
