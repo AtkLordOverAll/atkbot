@@ -24,19 +24,19 @@ client.on("message", (message) => {
         console.log("Clean text response given.");
         return;
     } else if (message.content.length < 100) { // limits length of dad jokes
-        if (message.content.toLowerCase().startsWith("i'm")) {
+        if (message.content.toLowerCase().startsWith("i'm ")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 4)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("im")) {
+        } else if (message.content.toLowerCase().startsWith("im ")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 3)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("i am")) {
+        } else if (message.content.toLowerCase().startsWith("i am ")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 5)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("i m")) {
+        } else if (message.content.toLowerCase().startsWith("i m ")) {
             // dad joke (fuck you adam)
             message.channel.send(`${dadJoke(message.content, 4)}`);
         }
