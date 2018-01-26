@@ -44,8 +44,6 @@ client.on("message", (message) => {
     }
 
     if (message.content.toLowerCase().startsWith("dad do your army impression")) {
-        console.log(`Doing an army impression of: "${message.content.slice(28)}"`);
-
         let msg = message.content.slice(28).toUpperCase();
         let out = "";
         let sub = "";
@@ -54,21 +52,16 @@ client.on("message", (message) => {
         for (let ch = 0; ch < msg.length; ch++) {
             sub = alphabet[msg.charAt(ch)];
             skip = false;
-            console.log(sub);
 
             if (sub != null) {
-                console.log(`sub != null is TRUE, adding ${sub}`);
                 out += sub;
-                console.log(`current output is: "${out}"`);
             } else {
-                console.log(`sub != null is FALSE, adding ${msg.charAt(ch)}`);
                 out += msg.charAt(ch);
                 skip = true;
             }
 
             if(!skip) {
                 out += addSpace(msg, ch);
-                console.log(`current output is: "${out}" [after addSpace()]`);
             }
         }
         message.channel.send(`**Sir, yes, sir!**`);
@@ -315,7 +308,7 @@ function dadJoke(phrase, snip) {
 // used for army joke
 function addSpace(str, ch) {
     if (ch != str.length - 2) { // Avoid end of array type errors (hopefully)
-        if (alphabet[str.charAt(ch + 1)] != null && str.charAt(ch) != " ") { // If the next character is going to be substituted
+        if (alphabet[str.charAt(ch + 1)] != null) { // If the next character is going to be substituted
             return " ";
         }
     } else {
