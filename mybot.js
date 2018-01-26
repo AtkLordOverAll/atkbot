@@ -6,6 +6,7 @@ const reload = require("reload-require")(module);
 
 let phrases = JSON.parse(fs.readFileSync("./cleanTextResponses.json", "utf8"));
 let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf8"));
+let alphabet = JSON.parse(fs.readFileSync("./phoneticAlphabet.json", "utf8"));
 
 // when bot finishes loading
 client.on("ready", () => {
@@ -24,23 +25,50 @@ client.on("message", (message) => {
         console.log("Clean text response given.");
         return;
     } else if (message.content.length < 100) { // limits length of dad jokes
-        if (message.content.toLowerCase().startsWith("i'm")) {
+        if (message.content.toLowerCase().startsWith("i'm ")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 4)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("im")) {
+        } else if (message.content.toLowerCase().startsWith("im ")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 3)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("i am")) {
+        } else if (message.content.toLowerCase().startsWith("i am ")) {
             // dad joke
             message.channel.send(`${dadJoke(message.content, 5)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("i m")) {
+        } else if (message.content.toLowerCase().startsWith("i m ")) {
             // dad joke (fuck you adam)
             message.channel.send(`${dadJoke(message.content, 4)}`);
         }
     }
+
+    if (message.content.toLowerCase().startsWith("dad do your army impression")) {
+        let msg = message.content.slice(28).toUpperCase();
+        let out = "";
+        let sub = "";
+        let skip = false;
+
+        for (let ch = 0; ch < msg.length; ch++) {
+            sub = alphabet[msg.charAt(ch)];
+            skip = false;
+
+            if (sub != null) {
+                out += sub;
+            } else {
+                out += msg.charAt(ch);
+                skip = true;
+            }
+
+            if(!skip) {
+                out += addSpace(msg, ch);
+            }
+        }
+        message.channel.send(`**Sir, yes, sir!**`);
+        message.channel.send(`${out}`);
+        return;
+    }
+
     if (!message.content.startsWith(config.prefix)) {
         return;
     }
@@ -57,12 +85,6 @@ client.on("message", (message) => {
     // list emojis
     /*if (command === "emojis") {
         message.channel.send(message.guild.emojis.map(e=>e.toString()).join(" "));
-        return;
-    }
-
-    // ASL lmao
-    if (command === "asl") {
-        message.reply(` I see you're a ${args[0]} year old ${args[1]} from ${args[2]}. Wanna date?`);
         return;
     }*/
 
@@ -281,6 +303,20 @@ function dadJoke(phrase, snip) {
     }
     console.log(`Dad joke made. ("${output}")`);
     return output;
+}
+
+// used for army joke
+function addSpace(str, ch) {
+    if (ch != str.length - 2) { // Avoid end of array type errors (hopefully)
+        if (alphabet[str.charAt(ch + 1)] != null) { // If the next character is going to be substituted
+            return " ";
+        }
+    } else {
+        if (alphabet[str.charAt(str.length - 1)] != null) {
+            return " ";
+        }
+    }
+    return "";
 }
 
 client.login(config.token);
