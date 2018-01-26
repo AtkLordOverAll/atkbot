@@ -48,8 +48,8 @@ client.on("message", (message) => {
 
         message.channel.send(`**Sir ${message.author.username}, yes, sir!**`);
 
-        if (msg == null) {
-            return; // doesn't actually end the if statement
+        if (msg == "") {
+            return;
         }
 
         message.delete(3000);
