@@ -47,7 +47,9 @@ client.on("message", (message) => {
         console.log(`Doing an army impression of: "${message.content.slice(28)}"`);
 
         let msg = message.content.slice(28).toUpperCase();
-        let out, sub = "";
+        let out = "";
+        let sub = "";
+        let skip = false;
         for (let ch = 0; ch < msg.length; ch++) {
             sub = alphabet[msg.charAt(ch)];
             console.log(sub);
@@ -65,7 +67,7 @@ client.on("message", (message) => {
             console.log(`current output is: "${out}" [after addSpace()]`);
         }
         message.channel.send(`**Sir, yes, sir!**`);
-        message.channel.send(`${out.slice(9)}`); // the fact that I'm slicing out "undefined" hurts me
+        message.channel.send(`${out}`);
         return;
     }
 
@@ -308,7 +310,7 @@ function dadJoke(phrase, snip) {
 // used for army joke
 function addSpace(str, ch) {
     if (ch != str.length - 2) { // Avoid end of array type errors (hopefully)
-        if (alphabet[str.charAt(ch + 1)] != null) { // If the next character is going to be substituted
+        if (alphabet[str.charAt(ch + 1)] != null && str.charAt(ch) != " ") { // If the next character is going to be substituted
             return " ";
         }
     } else {
