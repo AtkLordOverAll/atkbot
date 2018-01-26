@@ -45,6 +45,13 @@ client.on("message", (message) => {
 
     if (message.content.toLowerCase().startsWith("dad do your army impression")) {
         let msg = message.content.slice(28).toUpperCase();
+
+        message.channel.send(`**Sir, yes, sir!**`);
+
+        if (msg == null) {
+            return;
+        }
+
         let out = "";
         let sub = "";
         let skip = false;
@@ -64,7 +71,6 @@ client.on("message", (message) => {
                 out += addSpace(msg, ch);
             }
         }
-        message.channel.send(`**Sir, yes, sir!**`);
         message.channel.send(`${out}`);
         return;
     }
