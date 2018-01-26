@@ -46,11 +46,13 @@ client.on("message", (message) => {
     if (message.content.toLowerCase().startsWith("dad do your army impression")) {
         let msg = message.content.slice(28).toUpperCase();
 
-        message.channel.send(`**Sir, yes, sir!**`);
+        message.channel.send(`**Sir ${message.author.username}, yes, sir!**`);
 
         if (msg == null) {
-            return;
+            return; // doesn't actually end the if statement
         }
+
+        message.delete(3000);
 
         let out = "";
         let sub = "";
