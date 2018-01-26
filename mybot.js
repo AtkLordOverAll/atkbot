@@ -50,21 +50,26 @@ client.on("message", (message) => {
         let out = "";
         let sub = "";
         let skip = false;
+
         for (let ch = 0; ch < msg.length; ch++) {
             sub = alphabet[msg.charAt(ch)];
+            skip = false;
             console.log(sub);
 
             if (sub != null) {
                 console.log(`sub != null is TRUE, adding ${sub}`);
                 out += sub;
-
+                console.log(`current output is: "${out}"`);
             } else {
                 console.log(`sub != null is FALSE, adding ${msg.charAt(ch)}`);
                 out += msg.charAt(ch);
+                skip = true;
             }
-            console.log(`current output is: "${out}" [before addSpace()]`);
-            out += addSpace(msg, ch);
-            console.log(`current output is: "${out}" [after addSpace()]`);
+
+            if(!skip) {
+                out += addSpace(msg, ch);
+                console.log(`current output is: "${out}" [after addSpace()]`);
+            }
         }
         message.channel.send(`**Sir, yes, sir!**`);
         message.channel.send(`${out}`);
