@@ -8,6 +8,8 @@ let phrases = JSON.parse(fs.readFileSync("./cleanTextResponses.json", "utf8"));
 let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf8"));
 let alphabet = JSON.parse(fs.readFileSync("./phoneticAlphabet.json", "utf8"));
 
+let echoing = false
+
 // when bot finishes loading
 client.on("ready", () => {
     client.user.setPresence({game: {name: config.game, type: 0}});
@@ -78,11 +80,14 @@ client.on("message", (message) => {
     }
 
     if (!message.content.startsWith(config.prefix)) {
+        if (echoing) {
+            message.channel.send(message.content);
+        }
         return;
     }
 
-    const command = message.content.split(/\s+/g)[0].substring(1);
-    const args = message.content.split(/\s+/g).slice(1);
+    const command = message.content.split(/\s+/g)[1];
+    const args = message.content.split(/\s+/g).slice(2);
 
     if (args.length === 0) {
         console.log(`Saw ${command} command sent from user ${message.author.username} (ID: ${message.author.id})`);
@@ -131,6 +136,17 @@ client.on("message", (message) => {
         }
         output += "\nI hope that helped you come to terms with that colour you just gave me. I've basically inherited the abilities of one of my many sons, Mallen.";
         message.channel.send(output);
+        return;
+    }
+
+    if (command === "echo" && message.member.roles.find("name", "Bot Dev")) {
+        if (echoing) {
+            message.channel.send("Dad echo :(");
+            echoing = false;
+        } else {
+            message.channel.send("Dad echo!");
+            echoing = true;
+        }
         return;
     }
 
