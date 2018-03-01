@@ -239,6 +239,19 @@ client.on("message", (message) => {
             message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
         }
     }
+
+    if (message.content.startsWith("list role ids")) {
+        let roles = message.guild.roles.array();
+        let out = `**__Role IDs__:**\n`;
+        console.log(roles.length);
+        for (n = 0; n < roles.length; n++) {
+            if (roles[n].name != "@everyone") {
+                out += `**${roles[n].name}**: *${roles[n].id}*\n`;
+            }
+        }
+        message.channel.send(out);
+        return;
+    }
 });
 
 // new person joins server
