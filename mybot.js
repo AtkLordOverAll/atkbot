@@ -45,8 +45,25 @@ client.on("message", (message) => {
         }
     }
 
-    if (message.content.toLowerCase().startsWith("dad do your army impression")) {
-        let msg = message.content.slice(28).toUpperCase();
+    const msgArray = message.content.split(/\s+/g); // deconstructs message down into string array
+
+    if (!message.content.startsWith(config.prefix)) {
+        if (echoing) {
+            message.channel.send(message.content);
+        }
+        return;
+    } else {
+        if (config.prefix[config.prefix.length - 1] == " ") { // gets rid of the command prefix
+            msgArray = msgArrary.slice(1);
+        } else {
+            msgArray[0] = msgArray.slice(config.prefix.length);
+        }
+        message.content = message.content.slice(config.prefix.length);
+        const command = msgArray[0];
+    }
+
+    if (message.content.toLowerCase().startsWith("do your army impression")) {
+        let msg = message.content.slice(24).toUpperCase();
 
         message.channel.send(`**Sir ${message.author.username}, yes, sir!**`);
 
@@ -54,7 +71,7 @@ client.on("message", (message) => {
             return;
         }
 
-        message.delete(3000);
+        message.delete(1000);
 
         let out = "";
         let sub = "";
@@ -71,7 +88,7 @@ client.on("message", (message) => {
                 skip = true;
             }
 
-            if(!skip) {
+            if (!skip) {
                 out += addSpace(msg, ch);
             }
         }
@@ -79,21 +96,7 @@ client.on("message", (message) => {
         return;
     }
 
-    if (!message.content.startsWith(config.prefix)) {
-        if (echoing) {
-            message.channel.send(message.content);
-        }
-        return;
-    }
-
-    const command = message.content.split(/\s+/g)[1];
-    const args = message.content.split(/\s+/g).slice(2);
-
-    if (args.length === 0) {
-        console.log(`Saw ${command} command sent from user ${message.author.username} (ID: ${message.author.id})`);
-    } else {
-        console.log(`Saw ${command} command with arguments [${args}], sent from user ${message.author.username} (ID: ${message.author.id})`);
-    }
+    console.log(`Saw message with command ("${message.content}") sent from user ${message.author.username} (ID: ${message.author.id})`);
 
     // list emojis
     /*if (command === "emojis") {
@@ -101,10 +104,10 @@ client.on("message", (message) => {
         return;
     }*/
 
-    if (command === "rgb" && args.length == 3) {
+    if (command === "rgb" && msgArray.length == 3) {
         let rgb = [0,0,0];
-        for (let a = 0; a < 3; a++) {
-            rgb[a] = (Math.floor(args[a] / 85));
+        for (let a = 1; a < 4; a++) {
+            rgb[a] = (Math.floor(msgArray[a] / 85));
         }
 
         let output = "Good question son!.\nAs you can clearly see, ";
@@ -172,68 +175,22 @@ client.on("message", (message) => {
         return;
     }
 
-    // suggestion approval (admin)
-    if (command === "acceptalias" && message.member.roles.find("name", "Bot Dev")) {
-        // check username
-        try {
-            let username = client.users.get(args[0]).username;
-            if (!suggestions[args[0]]){
-                message.channel.send(`User ${username} appears to have no pending suggestions.`);
-                return;
-            }
-        } catch (err) {
-            message.channel.send("Failed to find person with that ID on this server. Sorry :'(");
-            return;
-        }
-
-        // if second argument isn't a number, accept all (probably should change this condition)
-        args[1] = parseInt(args[1]) - 1;
-        if (args[1] !== args[1]) {
-            message.channel.send(`Accepting all of ${client.users.get(args[0]).username}'s suggestions. We're basically related at this point ${args[0].toString()}.`);
-            let i;
-            for (i in suggestions[args[0]]){
-                phrases[suggestions[args[0]][i][0]] = suggestions[args[0]][i][1];
-                delete suggestions[args[0]][i];
-            }
-        } else {
-            message.channel.send(`Accepting one of ${client.users.get(args[0]).username}'s suggestions. I feel special :3`);
-            phrases[suggestions[args[0]][args[1]][0]] = suggestions[args[0]][args[1]][1];
-            delete suggestions[args[0]][args[1]];
-        }
-
-        saveJSON(phrases, "./cleanTextResponses.json", "", message.channel.id);
-        saveJSON(suggestions, "./cleanTextSuggestions.json", "", message.channel.id);
-        return;
-    }
-
     // add or suggest clean text responses
     if (command === "alias" && message.member.roles.find("name", "Bot Dev")) {
-        phrases[args[0]] = args[1];
+        //phrases[args[0]] = args[1];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias accepted. What are you programming me to become?!", message.channel.id);
-    } /*else if (command === "alias") {
-        //let no = Object.keys(suggestions[message.author.id]).length;
-        //console.log(no);
-        let count,key = 0;
-        for (key in suggestions[message.author.id]) {
-            if (suggestions[message.author.id].hasOwnProperty(key)) {
-                count++;
-            }
-        }
-        console.log(count);
-        //suggestions[message.author.id][no] = [args[0], args[1]];
-        //saveJSON(suggestions, "./cleanTextSuggestions.json", "Alias suggested. Are you sure this is good for me?", message.channel.id);
-    }*/
+    }
 
     // remove clean text responses (admin)
     if (command === "dealias" && message.member.roles.find("name", "Bot Dev")) {
-        delete phrases[args[0]];
+        //delete phrases[args[0]];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias removed. I feel... lacking.", message.channel.id);
     }
 
     // evalmsg (admin)
     if (command === "evalmsg" && message.member.roles.find("name", "Bot Dev")) {
         try {
-            const code = "message.channel.send(" + args.join(" ") + ");";
+            const code = "message.channel.send(" + message.content.slice(command.length) + ");";
             console.log(code);
             let evaled = eval(code);
 
@@ -250,14 +207,14 @@ client.on("message", (message) => {
 
     // set game (admin)
     if (command === "setgame" && message.member.roles.find("name", "Bot Dev")) {
-        client.user.setPresence({game: {name: args.join(" "), type: 0}});
+        client.user.setPresence({game: {name: message.content.slice(command.length), type: 0}});
         return;
     }
 
     // eval (owner)
     if (command === "eval" && message.author.id === config.ownerID) {
         try {
-            const code = args.join(" ");
+            const code = message.content.slice(command.length);
             let evaled = eval(code);
 
             if (typeof evaled !== "string") {
