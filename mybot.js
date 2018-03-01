@@ -162,6 +162,22 @@ client.on("message", (message) => {
     // add or suggest clean text responses
     if (command === "alias" && message.member.roles.find("name", "Bot Dev")) {
         //phrases[args[0]] = args[1];
+        let processThis = message.content.slice(command.length + 1);
+        let speechMarkCount = 0;
+        if (processThis[0] != '"') {
+            return;
+        }
+        let alias = ["",""]
+        for (let i = 1; i < processThis.length; i++) {
+            if (processThis == '"') {
+                speechMarkCount++;
+            } else if (speechMarkCount < 1) {
+                alias[0] += processThis[i];
+            } else if (speechMarkCount == 2) {
+                alias[1] += processThis[i];
+            }
+        }
+        phrases[alias[0]] = alias[1];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias accepted. What are you programming me to become?!", message.channel.id);
     }
 
