@@ -54,7 +54,7 @@ client.on("message", (message) => {
         return;
     } else {
         if (config.prefix[config.prefix.length - 1] == " ") { // gets rid of the command prefix
-            msgArray = msgArrary.slice(1);
+            msgArray = msgArray.slice(1);
         } else {
             msgArray[0] = msgArray.slice(config.prefix.length);
         }
