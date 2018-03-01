@@ -154,24 +154,8 @@ client.on("message", (message) => {
     }
 
     // list clean text responses (admin)
-    if (command === "aliaslist" && message.member.roles.find("name", "Bot Dev")){
+    if (message.content.startsWith("list aliases")){
         message.channel.send(`**Current aliases are:**\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g,": ").replace(/{/g,"").replace(/}/g,"")}`);
-        return;
-    }
-
-    // list clean text suggestions (admin)
-    if (command === "suggestlist" && message.member.roles.find("name", "Bot Dev")){
-        message.channel.send("**Pending Suggestions:**");
-        let i,j;
-        let output = "";
-        for (i in suggestions){
-            output += `Suggestion(s) from *${client.users.get(i).username}*: `;
-            for (j in suggestions[i]) {
-                output += `${suggestions[i][j][0]} => ${suggestions[i][j][1]}, `;
-            }
-            output += "\n";
-        }
-        message.channel.send(output);
         return;
     }
 
@@ -190,7 +174,7 @@ client.on("message", (message) => {
     // evalmsg (admin)
     if (command === "evalmsg" && message.member.roles.find("name", "Bot Dev")) {
         try {
-            const code = "message.channel.send(" + message.content.slice(command.length) + ");";
+            const code = "message.channel.send(" + message.content.slice(command.length + 1) + ");";
             console.log(code);
             let evaled = eval(code);
 
@@ -207,14 +191,14 @@ client.on("message", (message) => {
 
     // set game (admin)
     if (command === "setgame" && message.member.roles.find("name", "Bot Dev")) {
-        client.user.setPresence({game: {name: message.content.slice(command.length), type: 0}});
+        client.user.setPresence({game: {name: message.content.slice(command.length + 1), type: 0}});
         return;
     }
 
     // eval (owner)
     if (command === "eval" && message.author.id === config.ownerID) {
         try {
-            const code = message.content.slice(command.length);
+            const code = message.content.slice(command.length + 1);
             let evaled = eval(code);
 
             if (typeof evaled !== "string") {
