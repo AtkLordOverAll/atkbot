@@ -45,7 +45,8 @@ client.on("message", (message) => {
         }
     }
 
-    const msgArray = message.content.split(/\s+/g); // deconstructs message down into string array
+    let msgArray = message.content.split(/\s+/g); // deconstructs message down into string array
+    let command = ""
 
     if (!message.content.startsWith(config.prefix)) {
         if (echoing) {
@@ -59,7 +60,7 @@ client.on("message", (message) => {
             msgArray[0] = msgArray.slice(config.prefix.length);
         }
         message.content = message.content.slice(config.prefix.length);
-        const command = msgArray[0];
+        command = msgArray[0];
     }
 
     if (message.content.toLowerCase().startsWith("do your army impression")) {
@@ -162,20 +163,21 @@ client.on("message", (message) => {
     // add or suggest clean text responses
     if (command === "alias" && message.member.roles.find("name", "Bot Dev")) {
         //phrases[args[0]] = args[1];
-        let processThis = message.content.slice(command.length + 1);
+        let processThis = message.content.slice(command.length + 1).toLowerCase();
         let speechMarkCount = 0;
         if (processThis[0] != '"') {
             return;
         }
-        let alias = ["",""]
+        let alias = ["",""];
         for (let i = 1; i < processThis.length; i++) {
-            if (processThis == '"') {
+            if (processThis[i] == '"') {
                 speechMarkCount++;
             } else if (speechMarkCount < 1) {
                 alias[0] += processThis[i];
             } else if (speechMarkCount == 2) {
                 alias[1] += processThis[i];
             }
+            console.log(`"${alias[0]}": "${alias[1]}"`);
         }
         phrases[alias[0]] = alias[1];
         saveJSON(phrases, "./cleanTextResponses.json", "Alias accepted. What are you programming me to become?!", message.channel.id);
