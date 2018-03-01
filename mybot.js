@@ -186,9 +186,15 @@ client.on("message", (message) => {
 
     // remove clean text responses (admin)
     if (command === "dealias" && message.member.roles.find("name", "Bot Dev")) {
-        //delete phrases[args[0]];
-        saveJSON(phrases, "./cleanTextResponses.json");
-        message.channel.send(`I will no longer say "${phrases[msgArray[0]]}" if you say "${msgArray[0]}". Sorry for any offense caused?`);
+        let toRemove = message.content.slice(command.length + 1).match(/[^"]+/g);
+        if (phrases[toRemove]) {
+            message.channel.send(`I will no longer say "${phrases[toRemove]}" if you say "${toRemove}". Sorry for any offense caused?`);
+            delete phrases[toRemove];
+            saveJSON(phrases, "./cleanTextResponses.json");
+        } else {
+            message.channel.send("I didn't know I was meant to say something when you said that. Sorry.");
+        }
+        return;
     }
 
     // evalmsg (admin)
