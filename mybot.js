@@ -180,13 +180,15 @@ client.on("message", (message) => {
             console.log(`"${alias[0]}": "${alias[1]}"`);
         }
         phrases[alias[0]] = alias[1];
-        saveJSON(phrases, "./cleanTextResponses.json", "Alias accepted. What are you programming me to become?!", message.channel.id);
+        saveJSON(phrases, "./cleanTextResponses.json");
+        message.channel.send("New hip and trendy phrase acquired. Watch out kiddo");
     }
 
     // remove clean text responses (admin)
     if (command === "dealias" && message.member.roles.find("name", "Bot Dev")) {
         //delete phrases[args[0]];
-        saveJSON(phrases, "./cleanTextResponses.json", "Alias removed. I feel... lacking.", message.channel.id);
+        saveJSON(phrases, "./cleanTextResponses.json");
+        message.channel.send(`I will no longer say "${phrases[msgArray[0]]}" if you say "${msgArray[0]}". Sorry for any offense caused?`);
     }
 
     // evalmsg (admin)
@@ -250,14 +252,10 @@ function clean(text) {
     }
 }
 
-// this is the best function
-function saveJSON(varName, file, message, id = message.channel.id) {
+function saveJSON(varName, file) {
     fs.writeFile(file, JSON.stringify(varName), err => {
         if (err) {
             console.error(err);
-        } else {
-            client.channels.get(id).send(message);
-            return;
         }
     });
 }
