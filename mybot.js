@@ -14,6 +14,7 @@ let echoing = false
 // when bot finishes loading
 client.on("ready", () => {
     client.user.setPresence({game: {name: config.game, type: 0}});
+    updatePerms();
     console.log("Bot loaded.\n");
 });
 
@@ -46,6 +47,7 @@ client.on("message", (message) => {
         }
     }
 
+    //let rawMsg = message.content; // before it gets chewed up by my processing later
     let msgArray = message.content.split(/\s+/g); // deconstructs message down into string array
     let command = ""
 
@@ -64,9 +66,9 @@ client.on("message", (message) => {
         command = msgArray[0];
     }
 
-    console.log(`Saw message with command ("${message.content}") sent from user ${message.author.username} (ID: ${message.author.id})`);
+    console.log(`Saw message with command ("${message.content}") sent from user ${message.author.username} (ID: ${message.author.id}, Permission Level: ${permLevels[message.author.id]})`);
 
-    if (message.member.roles.exists('id', config.tier1) || message.member.roles.exists('id', config.tier2) || message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (permLevels[message.author.id] >= 1) {
 
         // COMMANDS ANYONE CAN USE HERE
 
@@ -150,13 +152,13 @@ client.on("message", (message) => {
 
     }
 
-    if (message.member.roles.exists('id', config.tier2) || message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (permLevels[message.author.id] >= 2) {
 
         // COMMANDS FOR TIER 2 AND ABOVE USERS HERE
 
         // add clean text responses
-        if (command === "alias" && message.member.roles.find("name", "Bot Dev")) {
-            let processThis = message.content.slice(command.length + 1).toLowerCase();
+        if (command === "alias") {
+            let processThis = message.content.slice(command.length + 1);
             let speechMarkCount = 0;
             if (processThis[0] != '"') {
                 return;
@@ -170,19 +172,19 @@ client.on("message", (message) => {
                 } else if (speechMarkCount == 2) {
                     alias[1] += processThis[i];
                 }
-                console.log(`"${alias[0]}": "${alias[1]}"`);
             }
-            phrases[alias[0]] = alias[1];
+            phrases[alias[0].toLowerCase()] = alias[1]; // we aren't fussy about the user's capitalisation, but the bot's is important
             saveJSON(phrases, "./cleanTextResponses.json");
-            message.channel.send("New hip and trendy phrase acquired. Watch out kiddo");
+            message.channel.send("New hip and trendy phrase acquired. Watch out kiddos.");
+            return;
         }
     }
 
-    if (message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (permLevels[message.author.id] >= 3) {
 
         // COMMANDS FOR TIER 3 AND ABOVE USERS HERE
 
-        if (command === "echo" && message.member.roles.find("name", "Bot Dev")) {
+        if (command === "echo") {
             if (echoing) {
                 message.channel.send("Dad echo :(");
                 echoing = false;
@@ -194,7 +196,7 @@ client.on("message", (message) => {
         }
     }
 
-    if (message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (permLevels[message.author.id] >= 4) {
 
         // COMMANDS FOR MODS HERE
 
@@ -227,14 +229,13 @@ client.on("message", (message) => {
         }
     }
 
-    if (message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (permLevels[message.author.id] >= 5) {
 
         // COMMANDS FOR DEVS HERE
 
         if (message.content.startsWith("list role ids")) {
             let roles = message.guild.roles.array();
             let out = `**__Role IDs__:**\n`;
-            console.log(roles.length);
             for (n = 0; n < roles.length; n++) {
                 if (roles[n].name != "@everyone") {
                     out += `**${roles[n].name}**: *${roles[n].id}*\n`;
@@ -245,7 +246,7 @@ client.on("message", (message) => {
         }
     }
 
-    if (message.author.id == 212571213912866826) {
+    if (permLevels[message.author.id] >= 6) {
 
         // COMMANDS FOR BOT OWNER HERE
 
@@ -269,7 +270,7 @@ client.on("message", (message) => {
 
         if (command === "evalmsg") {
             try {
-                const code = "message.channel.send(" + message.content.slice(command.length + 1) + ");";
+                const code = "message.channel.send(" + message.content + ");";
                 console.log(code);
                 let evaled = eval(code);
 
@@ -290,6 +291,7 @@ client.on("message", (message) => {
 client.on("guildMemberAdd", (member) => {
     member.guild.defaultChannel.send(`Hi ${member.user.toString()} :3 Welcome to the server!`);
     console.log(`User ${member.user.username} (ID: ${member.user.id}) joined the server`);
+    updatePerms()
     member.addRole(config.tier1).catch(console.error);
 });
 
@@ -375,7 +377,7 @@ function updatePerms() {
         }
     }
     saveJSON(permLevels, "./permLevels.json")
-    console.log("Updated permissions database");
+    console.log("Updated permissions database.");
 }
 
 client.login(config.token);
