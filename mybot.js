@@ -7,6 +7,7 @@ const reload = require("reload-require")(module);
 let phrases = JSON.parse(fs.readFileSync("./cleanTextResponses.json", "utf8"));
 let suggestions = JSON.parse(fs.readFileSync("./cleanTextSuggestions.json", "utf8"));
 let alphabet = JSON.parse(fs.readFileSync("./phoneticAlphabet.json", "utf8"));
+let permLevels = JSON.parse(fs.readFileSync("./permLevels.json", "utf8"))
 
 let echoing = false
 
@@ -147,7 +148,9 @@ client.on("message", (message) => {
             return;
         }
 
-    } else if (message.member.roles.exists('id', config.tier2) || message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    }
+
+    if (message.member.roles.exists('id', config.tier2) || message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
 
         // COMMANDS FOR TIER 2 AND ABOVE USERS HERE
 
@@ -173,8 +176,9 @@ client.on("message", (message) => {
             saveJSON(phrases, "./cleanTextResponses.json");
             message.channel.send("New hip and trendy phrase acquired. Watch out kiddo");
         }
+    }
 
-    } else if (message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (message.member.roles.exists('id', config.tier3) || message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
 
         // COMMANDS FOR TIER 3 AND ABOVE USERS HERE
 
@@ -188,8 +192,9 @@ client.on("message", (message) => {
             }
             return;
         }
+    }
 
-    } else if (message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (message.member.roles.exists('id', config.mods) || message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
 
         // COMMANDS FOR MODS HERE
 
@@ -204,6 +209,10 @@ client.on("message", (message) => {
             return;
         }
 
+        if (message.content.startsWith("update perms")) {
+            updatePerms();
+        }
+
         // remove clean text responses
         if (command === "dealias") {
             let toRemove = message.content.slice(command.length + 1).match(/[^"]+/g);
@@ -216,8 +225,9 @@ client.on("message", (message) => {
             }
             return;
         }
+    }
 
-    } else if (message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
+    if (message.member.roles.exists('id', config.devs) || message.author.id == 212571213912866826) {
 
         // COMMANDS FOR DEVS HERE
 
@@ -233,8 +243,9 @@ client.on("message", (message) => {
             message.channel.send(out);
             return;
         }
+    }
 
-    } else if (message.author.id == 212571213912866826) {
+    if (message.author.id == 212571213912866826) {
 
         // COMMANDS FOR BOT OWNER HERE
 
@@ -272,7 +283,6 @@ client.on("message", (message) => {
                 message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
             }
         }
-
     }
 });
 
@@ -338,6 +348,34 @@ function addSpace(str, ch) {
         }
     }
     return "";
+}
+
+// used to update all user permission levels
+function updatePerms() {
+    let guilds = client.guilds.array();
+    let guildMembers;
+    for (let n = 0; n < guilds.length; n++) { // iterate through servers bot is running on
+        guildMembers = guilds[n].members.array();
+        for (let m = 0; m < guildMembers.length; m++) { // iterate through members in the server
+            if (guildMembers[m].id == 212571213912866826) {
+                permLevels[guildMembers[m].id] = 6; // assuming there are 6 power levels
+            } else if (guildMembers[m].roles.exists('id', config.devs)) {
+                permLevels[guildMembers[m].id] = 5;
+            } else if (guildMembers[m].roles.exists('id', config.mods)) {
+                permLevels[guildMembers[m].id] = 4;
+            } else if (guildMembers[m].roles.exists('id', config.tier3)) {
+                permLevels[guildMembers[m].id] = 3;
+            } else if (guildMembers[m].roles.exists('id', config.tier2)) {
+                permLevels[guildMembers[m].id] = 2;
+            } else if (guildMembers[m].roles.exists('id', config.tier1)) {
+                permLevels[guildMembers[m].id] = 1;
+            } else {
+                permLevels[guildMembers[m].id] = 0;
+            }
+        }
+    }
+    saveJSON(permLevels, "./permLevels.json")
+    console.log("Updated permissions database");
 }
 
 client.login(config.token);
