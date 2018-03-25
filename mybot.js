@@ -22,28 +22,30 @@ client.on("ready", () => {
 client.on("message", (message) => {
 
     // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
+    let regexedMsg = message.content.toLowerCase().match(/[^*~_]/g).join('');
+    console.log(regexedMsg);
     if (message.author.bot) {
         return;
-    } else if (phrases[message.content.toLowerCase()]) {
-        message.channel.send(phrases[message.content.toLowerCase()]);
+    } else if (phrases[regexedMsg]) {
+        message.channel.send(phrases[regexedMsg]);
         console.log("Clean text response given.");
         return;
     } else if (message.content.length < 100) { // limits length of dad jokes
-        if (message.content.toLowerCase().startsWith("i'm ")) {
+        if (regexedMsg.startsWith("i'm ")) {
             // dad joke
-            message.channel.send(`${dadJoke(message.content, 4)}`);
+            message.channel.send(`${dadJoke(regexedMsg, 4)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("im ")) {
+        } else if (regexedMsg.startsWith("im ")) {
             // dad joke
-            message.channel.send(`${dadJoke(message.content, 3)}`);
+            message.channel.send(`${dadJoke(regexedMsg, 3)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("i am ")) {
+        } else if (regexedMsg.startsWith("i am ")) {
             // dad joke
-            message.channel.send(`${dadJoke(message.content, 5)}`);
+            message.channel.send(`${dadJoke(regexedMsg, 5)}`);
             return;
-        } else if (message.content.toLowerCase().startsWith("i m ")) {
+        } else if (regexedMsg.startsWith("i m ")) {
             // dad joke (fuck you adam)
-            message.channel.send(`${dadJoke(message.content, 4)}`);
+            message.channel.send(`${dadJoke(regexedMsg, 4)}`);
         }
     }
 
@@ -213,6 +215,7 @@ client.on("message", (message) => {
 
         if (message.content.startsWith("update perms")) {
             updatePerms();
+            return;
         }
 
         // remove clean text responses
@@ -262,10 +265,10 @@ client.on("message", (message) => {
                 //message.channel.send(clean(evaled), {code:"x1"});
                 message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
                 //message.channel.send(clean(evaled));
-                return;
             } catch (err) {
                 message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
             }
+            return;
         }
 
         if (command === "evalmsg") {
@@ -279,11 +282,11 @@ client.on("message", (message) => {
                 }
 
                 message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
-                return;
             } catch (err) {
                 message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
             }
         }
+        return;
     }
 });
 
@@ -291,7 +294,7 @@ client.on("message", (message) => {
 client.on("guildMemberAdd", (member) => {
     member.guild.defaultChannel.send(`Hi ${member.user.toString()} :3 Welcome to the server!`);
     console.log(`User ${member.user.username} (ID: ${member.user.id}) joined the server`);
-    updatePerms()
+    updatePerms();
     member.addRole(config.tier1).catch(console.error);
 });
 
