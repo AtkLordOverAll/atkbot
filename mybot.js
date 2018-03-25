@@ -23,7 +23,6 @@ client.on("message", (message) => {
 
     // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
     let regexedMsg = message.content.toLowerCase().match(/[^*~_]/g).join('');
-    console.log(regexedMsg);
     if (message.author.bot) {
         return;
     } else if (phrases[regexedMsg]) {
