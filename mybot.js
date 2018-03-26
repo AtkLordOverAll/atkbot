@@ -202,7 +202,10 @@ client.on("message", (message) => {
         // COMMANDS FOR MODS HERE
 
         if (message.content.startsWith("set game to")) {
-            client.user.setPresence({game: {name: message.content.slice(command.length + 1), type: 0}});
+            config.game = message.content.slice(command.length + 1);
+            saveJSON(config, "./config.json");
+            client.user.setPresence({game: {name: config.game, type: 0}});
+            message.channel.send("Game set.");
             return;
         }
 
