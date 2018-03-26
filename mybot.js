@@ -294,7 +294,7 @@ client.on("message", (message) => {
 
 // new person joins server
 client.on("guildMemberAdd", (member) => {
-    if !(member.bot) {
+    if (!member.bot) {
         member.guild.defaultChannel.send(`Hi ${member.user.toString()} :3 Welcome to the server!`);
         console.log(`User ${member.user.username} (ID: ${member.user.id}) joined the server`);
         member.addRole(config.tier1).catch(console.error);
