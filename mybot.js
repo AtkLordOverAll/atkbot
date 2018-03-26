@@ -294,10 +294,15 @@ client.on("message", (message) => {
 
 // new person joins server
 client.on("guildMemberAdd", (member) => {
-    member.guild.defaultChannel.send(`Hi ${member.user.toString()} :3 Welcome to the server!`);
-    console.log(`User ${member.user.username} (ID: ${member.user.id}) joined the server`);
+    if !(member.bot) {
+        member.guild.defaultChannel.send(`Hi ${member.user.toString()} :3 Welcome to the server!`);
+        console.log(`User ${member.user.username} (ID: ${member.user.id}) joined the server`);
+        member.addRole(config.tier1).catch(console.error);
+    } else {
+        member.guild.defaultChannel.send("Another bot threatens my presence...\nDad is displeased.");
+        console.log(`Bot ${member.user.username} (ID: ${member.user.id}) joined the server`);
+    }
     updatePerms();
-    member.addRole(config.tier1).catch(console.error);
 });
 
 // used with eval
