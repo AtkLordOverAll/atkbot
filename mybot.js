@@ -82,7 +82,7 @@ client.on("message", (message) => {
                 return;
             }
 
-            message.delete(1000);
+            message.delete(100);
 
             let out = "";
             let sub = "";
@@ -176,6 +176,7 @@ client.on("message", (message) => {
             }
             phrases[alias[0].toLowerCase()] = alias[1]; // we aren't fussy about the user's capitalisation, but the bot's is important
             saveJSON(phrases, "./cleanTextResponses.json");
+            message.delete(100);
             message.channel.send("New hip and trendy phrase acquired. Watch out kiddos.");
             return;
         }
@@ -217,6 +218,7 @@ client.on("message", (message) => {
 
         if (message.content.startsWith("update perms")) {
             updatePerms();
+            message.channel.send("Dad's got you covered.");
             return;
         }
 
