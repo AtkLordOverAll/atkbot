@@ -220,6 +220,7 @@ client.on("message", (message) => {
         // list clean text responses
         if (message.content.startsWith("list aliases")){
             message.author.send(`**Current aliases are:**\n\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g," -> ").replace(/{/g,"").replace(/}/g,"")}\n\n*Please do not share this around, it will result in swift removal of both your message and ability to use this command.*`);
+            message.channel.send(`DM sent 😉`);
             console.log(`Sent list of current aliases to ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
@@ -260,6 +261,11 @@ client.on("message", (message) => {
             }
             message.channel.send(out);
             console.log(`Role IDs were listed for the benefit of ${message.author.username} (ID: ${message.author.id})`);
+            return;
+        }
+
+        if (message.content.startsWith("log")) {
+            console.log(`Logged ${message.content.slice(command.length + 1)} for ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
     }
