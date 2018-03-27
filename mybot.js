@@ -219,7 +219,7 @@ client.on("message", (message) => {
 
         // list clean text responses
         if (message.content.startsWith("list aliases")){
-            message.author.sendMessage(`**Current aliases are:**\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g," -> ").replace(/{/g,"").replace(/}/g,"")}\nPlease do not share this around, it will result in swift removal of both your message and ability to use this command.`);
+            message.author.send(`**Current aliases are:**\n\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g," -> ").replace(/{/g,"").replace(/}/g,"")}\n\n*Please do not share this around, it will result in swift removal of both your message and ability to use this command.*`);
             console.log(`Sent list of current aliases to ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
