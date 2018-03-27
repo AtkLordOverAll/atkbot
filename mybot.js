@@ -32,7 +32,7 @@ client.on("message", (message) => {
         return;
     } else if (phrases[regexedMsg]) {
         message.channel.send(phrases[regexedMsg]);
-        console.log("Clean text response given.");
+        console.log(`Alias quoted "${regexedMsg}" -> "${phrases[regexedMsg]}" for ${message.author.username} (ID: ${message.author.id})`);
         return;
     } else if (message.content.length < 100) { // limits length of dad jokes
         if (regexedMsg.startsWith("i'm ")) {
@@ -80,7 +80,7 @@ client.on("message", (message) => {
             let msg = message.content.slice(24).toUpperCase();
 
             message.channel.send(`**Sir ${message.author.username}, yes, sir!**`);
-            console.log(`Did an army impression for ${message.author.username} (ID: ${message.author.id}`);
+            console.log(`Did an army impression for ${message.author.username} (ID: ${message.author.id})`);
 
             if (msg == "") {
                 return;
