@@ -24,7 +24,7 @@ client.on("message", (message) => {
     // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
     let regexedMsg = message.content.toLowerCase().match(/[^*~_]/g);
     regexedMsg = regexedMsg.join('');
-    
+
     if (message.author.bot) {
         return;
     } else if (phrases[regexedMsg]) {
@@ -375,15 +375,15 @@ function updatePerms() {
         for (let m = 0; m < guildMembers.length; m++) { // iterate through members in the server
             if (guildMembers[m].id == 212571213912866826) {
                 permLevels[guildMembers[m].id] = 6; // assuming there are 6 power levels
-            } else if (guildMembers[m].roles.exists('id', config.devs)) {
+            } else if (guildMembers[m].roles.has(config.devs)) {
                 permLevels[guildMembers[m].id] = 5;
-            } else if (guildMembers[m].roles.exists('id', config.mods)) {
+            } else if (guildMembers[m].roles.has(config.mods)) {
                 permLevels[guildMembers[m].id] = 4;
-            } else if (guildMembers[m].roles.exists('id', config.tier3)) {
+            } else if (guildMembers[m].roles.has(config.tier3)) {
                 permLevels[guildMembers[m].id] = 3;
-            } else if (guildMembers[m].roles.exists('id', config.tier2)) {
+            } else if (guildMembers[m].roles.has(config.tier2)) {
                 permLevels[guildMembers[m].id] = 2;
-            } else if (guildMembers[m].roles.exists('id', config.tier1)) {
+            } else if (guildMembers[m].roles.has(config.tier1)) {
                 permLevels[guildMembers[m].id] = 1;
             } else {
                 permLevels[guildMembers[m].id] = 0;
