@@ -214,7 +214,8 @@ client.on("message", (message) => {
 
         // list clean text responses
         if (message.content.startsWith("list aliases")){
-            message.channel.send(`**Current aliases are:**\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g,": ").replace(/{/g,"").replace(/}/g,"")}`);
+            message.author.sendMessage(`**Current aliases are:**\n${JSON.stringify(phrases).replace(/,/g, "\n").replace(/:/g,": ").replace(/{/g,"").replace(/}/g,"")}\nPlease do not share this around, it will result in swift removal of both your message and ability to use this command.`);
+            console.log(`Sent list of current aliases to ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
 
@@ -370,10 +371,13 @@ function addSpace(str, ch) {
 function updatePerms() {
     let guilds = client.guilds.array();
     let guildMembers;
+    permLevels = {}; // wipes permLevels before rebuilding it
     for (let n = 0; n < guilds.length; n++) { // iterate through servers bot is running on
         guildMembers = guilds[n].members.array();
         for (let m = 0; m < guildMembers.length; m++) { // iterate through members in the server
-            if (guildMembers[m].id == 212571213912866826) {
+            if (guildMembers[m].bot) {
+                permLevels[guildMembers[m].id] = 0;
+            } else if (guildMembers[m].id == config.ownerID) {
                 permLevels[guildMembers[m].id] = 6; // assuming there are 6 power levels
             } else if (guildMembers[m].roles.has(config.devs)) {
                 permLevels[guildMembers[m].id] = 5;
@@ -390,6 +394,7 @@ function updatePerms() {
             }
         }
     }
+    permLevels[config.ownerID] = 6;
     saveJSON(permLevels, "./permLevels.json")
     console.log("Updated permissions database.");
 }
