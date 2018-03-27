@@ -69,8 +69,6 @@ client.on("message", (message) => {
         command = msgArray[0];
     }
 
-    console.log(`Saw message with command ("${message.content}") sent from user ${message.author.username} (ID: ${message.author.id}, Permission Level: ${permLevels[message.author.id]})`);
-
     if (permLevels[message.author.id] >= 1) {
 
         // COMMANDS ANYONE CAN USE HERE
@@ -79,6 +77,7 @@ client.on("message", (message) => {
             let msg = message.content.slice(24).toUpperCase();
 
             message.channel.send(`**Sir ${message.author.username}, yes, sir!**`);
+            console.log(`Did an army impression for ${message.author.username} (ID: ${message.author.id}`);
 
             if (msg == "") {
                 return;
@@ -106,6 +105,7 @@ client.on("message", (message) => {
                 }
             }
             message.channel.send(`${out}`);
+
             return;
         }
 
@@ -150,6 +150,7 @@ client.on("message", (message) => {
             }
             output += "\nI hope that helped you come to terms with that colour you just gave me. I've basically inherited the abilities of one of my many sons, Mallen.";
             message.channel.send(output);
+            console.log(`Described a colour to ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
 
@@ -180,6 +181,7 @@ client.on("message", (message) => {
             saveJSON(phrases, "./cleanTextResponses.json");
             message.delete(100);
             message.channel.send("New hip and trendy phrase acquired. Watch out kiddos.");
+            console.log(`Learnt new alias "${alias[0]}" -> "${alias[1]} from ${message.author.username} (ID: ${message.author.id})"`);
             return;
         }
     }
@@ -191,9 +193,11 @@ client.on("message", (message) => {
         if (command === "echo") {
             if (echoing) {
                 message.channel.send("Dad echo :(");
+                console.log(`Echoing stopped by ${message.author.username} (ID: ${message.author.id})`);
                 echoing = false;
             } else {
                 message.channel.send("Dad echo!");
+                console.log(`Echoing started by ${message.author.username} (ID: ${message.author.id})`);
                 echoing = true;
             }
             return;
@@ -209,6 +213,7 @@ client.on("message", (message) => {
             saveJSON(config, "./config.json");
             client.user.setPresence({game: {name: config.game, type: 0}});
             message.channel.send("Game set.");
+            console.log(`Game was set to "${message.content.slice(command.length + 1)} by ${message.author.username} (ID: ${message.author.id})"`)
             return;
         }
 
@@ -230,10 +235,12 @@ client.on("message", (message) => {
             let toRemove = message.content.slice(command.length + 1).match(/[^"]+/g);
             if (phrases[toRemove]) {
                 message.channel.send(`I will no longer say "${phrases[toRemove]}" if you say "${toRemove}". Sorry for any offense caused?`);
+                console.log(`Removed alias "${toRemove}" -> "${phrases[toRemove]}", as requested by ${message.author.username} (ID: ${message.author.id})`);
                 delete phrases[toRemove];
                 saveJSON(phrases, "./cleanTextResponses.json");
             } else {
                 message.channel.send("I didn't know I was meant to say something when you said that. Sorry.");
+                console.log(`Removing alias ${toRemove} failed, as it doesn't appear to exist. Requested by ${message.author.username} (ID: ${message.author.id})`);
             }
             return;
         }
@@ -252,6 +259,7 @@ client.on("message", (message) => {
                 }
             }
             message.channel.send(out);
+            console.log(`Role IDs were listed for the benefit of ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
     }
@@ -271,6 +279,7 @@ client.on("message", (message) => {
 
                 //message.channel.send(clean(evaled), {code:"x1"});
                 message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
+                console.log(`Ran "${code}" for ${message.author.username} (ID: ${message.author.id})`);
                 //message.channel.send(clean(evaled));
             } catch (err) {
                 message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
@@ -287,8 +296,8 @@ client.on("message", (message) => {
                 if (typeof evaled !== "string") {
                     evaled = require("util").inspect(evaled);
                 }
-
                 message.reply(`I ran what you asked me to (I think):\n\`\`\`js\n${code}\`\`\``);
+                console.log(`Ran "${code}" for ${message.author.username} (ID: ${message.author.id})`);
             } catch (err) {
                 message.channel.send(`\`\`\`xl\n${clean(err)}\n\`\`\``);
             }
