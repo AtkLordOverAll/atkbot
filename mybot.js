@@ -267,7 +267,7 @@ client.on("message", (message) => {
             return;
         }
 
-        if (message.content.startsWith("log")) {
+        if (command === "log") {
             console.log(`Logged ${message.content.slice(command.length + 1)} for ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
