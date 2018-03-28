@@ -271,6 +271,12 @@ client.on("message", (message) => {
             console.log(`Logged ${message.content.slice(command.length + 1)} for ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
+
+        if (command === "say") {
+            message.delete(50);
+            message.channel.send(message.content.slice(command.length + 1));
+            console.log(`Said "${message.content.slice(command.length + 1)}" because ${message.author.username} (ID: ${message.author.id}) told me to`);
+        }
     }
 
     if (permLevels[message.author.id] >= 6) {
