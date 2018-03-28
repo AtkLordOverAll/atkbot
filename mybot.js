@@ -184,7 +184,7 @@ client.on("message", (message) => {
             saveJSON(phrases, "./cleanTextResponses.json");
             message.delete(100);
             message.channel.send("New hip and trendy phrase acquired. Watch out kiddos.");
-            console.log(`Learnt new alias "${alias[0]}" -> "${alias[1]} from ${message.author.username} (ID: ${message.author.id})"`);
+            console.log(`Learnt new alias "${alias[0]}" -> "${alias[1]}" from ${message.author.username} (ID: ${message.author.id})`);
             return;
         }
     }
