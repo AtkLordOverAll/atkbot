@@ -334,6 +334,16 @@ client.on("guildMemberAdd", (member) => {
     updatePerms();
 });
 
+client.on("guildCreate", (guild) => {
+    // when bot joins a server
+    console.log(`New guild joined: ${guild.name} (ID: ${guild.id})`);
+});
+
+client.on("guildDelete", (guild) => {
+    // when bot is removed from a server
+    console.log(`I have been removed from: ${guild.name} (ID: ${guild.id})`);
+});
+
 // used with eval
 function clean(text) {
     if(typeof(text) === "string"){
