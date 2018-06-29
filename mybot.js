@@ -24,7 +24,7 @@ client.on("message", (message) => {
     // terminates if message is from a bot, then checks for clean text responses and dad joke opportunities, then terminates if no command prefix is found
     let regexedMsg = "";
     if (message.content != "") {
-        regexedMsg = message.content.toLowerCase().match(/[^*~_]/g);
+        regexedMsg = message.content.toLowerCase().match(/[^*~_`]/g);
         regexedMsg = regexedMsg.join('');
     }
 
