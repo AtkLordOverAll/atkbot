@@ -428,7 +428,6 @@ function updatePerms() {
             }
         }
     }
-    permLevels[config.ownerID] = 6;
     saveJSON(permLevels, "./permLevels.json")
     console.log("Updated permissions database.");
 }
