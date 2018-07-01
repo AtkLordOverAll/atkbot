@@ -1,2 +1,7 @@
 node_modules
 config.json
+cleanTextResponses.json
+cleanTextSuggestions.json
+npm-debug.log
+package-lock.json
+permLevels.json
